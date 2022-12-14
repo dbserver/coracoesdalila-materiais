@@ -47,37 +47,85 @@ O jogador compra uma carta se possuir corações suficientes para comprá-la.
 11. O front verifica se o jogo está FINALIZADO (como descrito [aqui](#finalizar-o-jogo))
 12. Se não estiver finalizado o front verifica quem é o jogador com JOGANDO e libera a jogada para ele.
 
-## 2. Comprar 1 carta Objetivo
-        link da api: jogada/comprarobjetivo
+## 2. Comprar Objetivo
 
-O jogador compra uma carta objetivo se possuir 1 coração de qualquer tipo.
+## 2.1 Comprar uma carta objetivo aleatória
+
+        link da api: jogada/comprarcartaobjetivo
+
+O jogador compra uma carta objetivo se possuir 1 coração pequeno de qualquer tipo.
 
 - - -
 ### Algoritmo
-1. O front habilita o baralho de cartas objetivo apenas se o jogador atual (marcado com JOGANDO) possui 1 coração (de qualquer tipo).
+1. O front habilita a opção de compra da carta objetivo aleatória apenas se o jogador atual (marcado com JOGANDO) possui 1 coração pequeno (de qualquer tipo).
 
-2. O jogador clica no baralho de cartas objetivos
+2. O jogador clica no botão correspondente ao coração pequeno.
 
-3. O front remove uma carta do baralho de objetivos e adiciona na lista de cartas objetivos do jogador.
+3. O front envia a requisição da compra para efetivar a compra no backend.
 
-4. O front envia para o back a alteração do status da sala no endereço http referente a esta jogada.
-
-5. O back valida a jogada:
+4. O back valida a jogada:
     - Verifica qual jogador tem o status JOGANDO.
     - Verifica se o jogador possui corações suficientes para comprar a carta objetivo.
-    - Remove o numero de corações referente a compra de objetivos (priorizando os corações pequenos)
+    - Se o jogador possuir um coração pequeno bônus não precisá pagar pela carta, se não, desconta um coração pequeno da mão do jogador.
+    - Sorteia uma carta objetivo das opções disponíveis na tabela do banco de dados sala_cartaobjetivo.
+    - Atribui a carta sorteada à tabela jogador_cartaobjetivo.
+    - Exclui da tabela sala_cartaobjetivo a carta sorteada.
     - Altera o status do jogador para ESPERANDO e ja atualiza o próximo jogador como JOGANDO.
+    - Verifica se esta é a última rodada do jogo e altera o status da sala para ÚLTIMA RODADA.
+    - Verifica se esta é a última rodada do jogo e o último turno e altera o status da sala para FINALIZADO.
 
-6. Altera a informação da sala no banco.
+5. Altera a informação da sala no banco.
+
+6. O back envia para o front a sala alterada através do websocket.
+
+7. O front atualiza o status da sala para todos.
+
+8. O front verifica se o jogo está FINALIZADO (como descrito [aqui](#finalizar-o-jogo))
+
+9. Se não estiver finalizado o front verifica quem é o jogador com JOGANDO e libera a jogada para ele.
+
+## 2.2 Comprar uma entre duas cartas objetivo
+
+    link da api: jogada/escolheentreduascartasobjetivo
+
+1. O front habilita a opção de escolha entre duas cartas objetivo aleatórias apenas se o jogador atual (marcado com JOGANDO) possui 1 coração grande (de qualquer tipo).
+
+2. O jogador clica no botão correspondente ao coração grande.
+
+3. O front envia a requisição de buscar duas cartas aleatórias para o backend.
+
+4. O back valida a jogada:
+    - Verifica qual jogador tem o status JOGANDO.
+    - Verifica se o jogador possui corações suficientes para comprar a carta objetivo.
+    - Se o jogador possuir um coração grande bônus não precisá pagar pela carta, se não, desconta um coração grande da mão do jogador.
+    - Sorteia duas cartas objetivo das opções disponíveis na tabela do banco de dados sala_cartaobjetivo.
+    - Atribui as cartas sorteadas ao atributo correspondente da sala, e envia a sala de volta para o jogador poder escolher uma entre as duas opções.
+
+
+5. O front abre uma pop-up para o jogador escolher uma entre as duas opções de carta objetivo, e o jogador precisa obrigatoriamente escolher uma delas.
+
+6. O jogador clica em uma das cartas e o front envia essa requisição ao backend.
+
+        link da api: jogada/compracartaobjetivoescolhida
+
+7. O back valida a jogada:
+    - Verifica qual jogador tem o status JOGANDO.
+    - Atribui a carta escolhida à tabela jogador_cartaobjetivo.
+    - Exclui a carta escolhida da tabela sala_cartaobjetivo.
+    - Altera o status do jogador para ESPERANDO e ja atualiza o próximo jogador como JOGANDO.
+    - Verifica se esta é a última rodada do jogo e altera o status da sala para ÚLTIMA RODADA.
+    - Verifica se esta é a última rodada do jogo e o último turno e altera o status da sala para FINALIZADO.
+
+
+8. Altera a informação da sala no banco.
 
 7. O back envia para o front a sala alterada através do websocket.
 
 8. O front atualiza o status da sala para todos.
 
-9. O front verifica se o jogo está FINALIZADO (como descrito [aqui](#finalizar-o-jogo))
+10. O front verifica se o jogo está FINALIZADO (como descrito [aqui](#finalizar-o-jogo))
 
-10. Se não estiver finalizado o front verifica quem é o jogador com JOGANDO e libera a jogada para ele.
-
+11. Se não estiver finalizado o front verifica quem é o jogador com JOGANDO e libera a jogada para ele.
 
 ## 3. Comprar corações
 
