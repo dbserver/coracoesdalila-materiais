@@ -66,7 +66,7 @@ O jogador compra uma carta objetivo se possuir 1 coração pequeno de qualquer t
 4. O back valida a jogada:
     - Verifica qual jogador tem o status JOGANDO.
     - Verifica se o jogador possui corações suficientes para comprar a carta objetivo.
-    - Se o jogador possuir um coração pequeno bônus não precisá pagar pela carta, se não, desconta um coração pequeno da mão do jogador.
+    - Se o jogador possuir um coração pequeno bônus não precisará pagar pela carta, se não, desconta um coração pequeno da mão do jogador.
     - Sorteia uma carta objetivo das opções disponíveis na tabela do banco de dados sala_cartaobjetivo.
     - Atribui a carta sorteada à tabela jogador_cartaobjetivo.
     - Exclui da tabela sala_cartaobjetivo a carta sorteada.
